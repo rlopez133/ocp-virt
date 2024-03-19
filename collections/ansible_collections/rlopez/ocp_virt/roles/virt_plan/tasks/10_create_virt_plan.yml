@@ -111,10 +111,43 @@
     filter_types: DISTRIBUTED_PORTGROUP
   register: my_portgroup
 
-- name: port group
-  debug:
-    var: my_portgroup
+- name: Capture the distrivuted portgroup id to make network mappings
+  set_fact: 
+    portgroup_id: "{{ my_portgroup.value[0].network }}"
 
+#- name: Create or update a NetworkMap
+#  kubernetes.core.k8s:
+#    state: present
+#    definition:
+#      apiVersion: forklift.konveyor.io/v1beta1
+#      kind: NetworkMap
+#      metadata:
+#        name: "{{ network_map_name }}"
+#        namespace: openshift-mtv
+#      spec:
+#        map:
+#          - destination:
+#              type: pod
+#            source:
+#              id: "{{ portgroup_id }}"
+#        provider:
+#          destination:
+#            name: host
+#            namespace: openshift-mtv
+#          source:
+#            name: vmware
+#            namespace: openshift-mtv
+
+- name: Build a list of all the datastores
+  vmware.vmware_rest.vcenter_datastore_info:
+    vcenter_hostname: "{{ vcenter_hostname }}"
+    vcenter_password: "{{ vcenter_password }}"
+    vcenter_username: "{{ vcenter_username }}"
+  register: all_the_datastores
+
+- name: get datastores
+  debug:
+    var: all_the_datastores
 
 
 - name: Deploy Virt Plan
