@@ -12,10 +12,10 @@
         description: ''
         map:
           network:
-            name: "{{ plan_name }}-{{ random_suffix_network }}"
+            name: "test-network"
             namespace: openshift-mtv
           storage:
-            name: "{{ plan_name }}-{{ random_suffix_storage }}"
+            name: "test-storage"
             namespace: openshift-mtv
         provider:
           destination:
