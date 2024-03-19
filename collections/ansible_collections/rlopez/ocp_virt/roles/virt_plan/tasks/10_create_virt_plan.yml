@@ -32,7 +32,29 @@
 
 - name: my datacenters
   ansible.builtin.debug:
-    var: datacenters
+    var: my_datacenters
+
+- name: Get a list of the hosts
+  vmware.vmware_rest.vcenter_host_info:
+    vcenter_hostname: "{{ vcenter_hostname }}"
+    vcenter_password: "{{ vcenter_password }}"
+    vcenter_username: "{{ vcenter_username }}"
+  register: my_hosts
+
+- name: my hosts
+  ansible.builtin.debug:
+    var: my_hosts
+
+- name: Build a list of all the clusters
+  vmware.vmware_rest.vcenter_cluster_info:
+    vcenter_hostname: "{{ vcenter_hostname }}"
+    vcenter_password: "{{ vcenter_password }}"
+    vcenter_username: "{{ vcenter_username }}"
+  register: all_the_clusters
+
+- name: all clusters
+  ansible.builtin.debug:
+    var: all_the_clusters
 
 - name: Deploy Virt Plan
   kubernetes.core.k8s:
