@@ -1,3 +1,28 @@
+- name: Get vSphere login session
+  ansible.builtin.uri:
+    url: "https://{{ vcenter_hostname }}/rest/com/vmware/cis/session"
+    method: POST
+    headers:
+      Content-Type: "application/json"
+    body_format: json
+    force_basic_auth: true
+    url_username: "{{ vcenter_username }}"
+    url_password: "{{ vcenter_password }}"
+  register: login_response
+
+- name: Get list of datastores
+  ansible.builtin.uri:
+    url: "https://{{ vcenter_hostname }}/rest/vcenter/datastore"
+    method: GET
+    headers:
+      Content-Type: "application/json"
+      vmware-api-session-id: "{{ login_response.json.value }}"
+  register: datastore_response
+
+- name: datastores
+  ansible.builtin.debug:
+    var: datastore_response
+
 - name: Deploy Virt Plan
   kubernetes.core.k8s:
     state: present
