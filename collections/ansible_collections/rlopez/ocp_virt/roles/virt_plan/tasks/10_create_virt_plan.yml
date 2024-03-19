@@ -23,15 +23,16 @@
   ansible.builtin.debug:
     var: datastore_response
 
-- name: Filter datastores starting with prefix 'workload_share'
-  set_fact:
-    filtered_datastores: "{{ datastore_response.json.value | json_query(query) }}"
-  vars:
-    query: "[?starts_with(name, 'workload_share')].{name: name, free_space: summary.free_space}"
+- name: collect a list of the datacenters
+  vmware.vmware_rest.vcenter_datacenter_info:
+    vcenter_hostname: "{{ vcenter_hostname }}"
+    vcenter_password: "{{ vcenter_password }}"
+    vcenter_username: "{{ vcenter_username }}"
+  register: my_datacenters
 
-- name: Choose the least used datastore
-  set_fact:
-    vcenter_datastore: "{{ filtered_datastores | sort(attribute='free_space') | first}}"
+- name: my datacenters
+  ansible.builtin.debug:
+    var: datacenters
 
 - name: Deploy Virt Plan
   kubernetes.core.k8s:
