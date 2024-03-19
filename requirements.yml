@@ -1,3 +1,3 @@
 collections:
-- name: kuberentes.core
+- name: kubernetes.core
 - name: vmware.vmware_rest
