@@ -61,37 +61,31 @@
     vcenter_hostname: "{{ vcenter_hostname }}"
     vcenter_password: "{{ vcenter_password }}"
     vcenter_username: "{{ vcenter_username }}"
-  register: my_folders
-
-- name: Build a list of all the folders with the type VIRTUAL_MACHINE and called vm
-  vmware.vmware_rest.vcenter_folder_info:
-    vcenter_hostname: "{{ vcenter_hostname }}"
-    vcenter_password: "{{ vcenter_password }}"
-    vcenter_username: "{{ vcenter_username }}"
-    filter_type: VIRTUAL_MACHINE
-    filter_names:
-    - vm
-  register: my_folders2
+  register: all_folders
 
 - name: my folders
   ansible.builtin.debug:
-    var: my_folders
+    var: all_folders
 
-- name: my folders2
-  ansible.builtin.debug:
-    var: my_folders2
+- name: Filter VM folders
+  set_fact:
+    vm_folders: "{{ all_folders.value | selectattr('type', 'equalto', 'VIRTUAL_MACHINE') | list }}"
 
-- name: Retrieve VMs
+- name: Check each VM folder for VMs
   vmware.vmware_rest.vcenter_vm_info:
     vcenter_hostname: "{{ vcenter_hostname }}"
     vcenter_password: "{{ vcenter_password }}"
     vcenter_username: "{{ vcenter_username }}"
-    folders: 'group-v1508009'
-  register: my_vms
+    folders: "{{ item.folder }}"
+  register: vm_folders_with_vms
+  loop: "{{ vm_folders }}"
+  when: vm_folders | length > 0
 
-- name: my vms
-  ansible.builtin.debug:
-    var: my_vms
+- name: Display VM folders that contain VMs
+  debug:
+    msg: "{{ item }}"
+  loop: "{{ vm_folders_with_vms.results }}"
+  when: item.value | length > 0
 
 - name: Deploy Virt Plan
   kubernetes.core.k8s:
