@@ -86,7 +86,7 @@
     vcenter_hostname: "{{ vcenter_hostname }}"
     vcenter_password: "{{ vcenter_password }}"
     vcenter_username: "{{ vcenter_username }}"
-    folders: 'group-v47'
+    folders: 'group-v1508009'
   register: my_vms
 
 - name: my vms
