@@ -87,6 +87,11 @@
     vcenter_password: "{{ vcenter_password }}"
     vcenter_username: "{{ vcenter_username }}"
     folders: 'group-v47'
+  register: my_vms
+
+- name: my vms
+  ansible.builtin.debug:
+    var: my_vms
 
 - name: Deploy Virt Plan
   kubernetes.core.k8s:
