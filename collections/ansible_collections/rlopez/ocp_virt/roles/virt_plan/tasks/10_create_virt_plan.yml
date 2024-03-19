@@ -81,11 +81,13 @@
   loop: "{{ vm_folders }}"
   when: vm_folders | length > 0
 
-- name: Display VM folders that contain VMs
+- name: Display VM names and IDs
   debug:
-    msg: "{{ item }}"
-  loop: "{{ vm_folders_with_vms.results }}"
-  when: item.value | length > 0
+    msg: "VM Name: {{ item.name }}, VM ID: {{ item.vm }}"
+  loop: "{{ vm_folders_with_vms.results | map(attribute='value') | flatten }}"
+  when: item | length > 0
+  loop_control:
+    label: "{{ item.name }}"
 
 - name: Deploy Virt Plan
   kubernetes.core.k8s:
