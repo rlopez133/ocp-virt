@@ -1,0 +1,11 @@
+- name: Gather firewall info about all ESXi Host in given Cluster
+  community.vmware.vmware_host_firewall_info:
+    hostname: "{{ hostname }}"
+    password: "{{ password }}"
+    username: "{{ username }}"
+    cluster_name: "{{ cluster_name }}"
+  register: details
+
+- name:
+  debug:
+    var: details

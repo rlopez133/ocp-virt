@@ -1,0 +1,44 @@
+- name: Get StorageClass resources
+  kubernetes.core.k8s_info:
+    api_version: storage.k8s.io/v1
+    kind: StorageClass
+  register: storage_class
+
+- name: Available Storageclasses within OpenShift Cluster and Provisioner Status
+  ansible.builtin.debug:
+    msg: |
+      StorageClass: {{ item.metadata.name }}
+      Provisioner: {{ item.provisioner }}
+      Supported Provisioner: {{ 'Yes' if item.provisioner in expected_provisioners else 'No' }}
+      {{ 'Note: You must apply the following settings: Filesystem volume mode and ReadWriteOnce access mode to enable dynamic provisioning and use this provisioner' if item.provisioner not in expected_provisioners else '' }}
+#  when: 
+#    - "item.metadata.annotations is defined"
+#    - "'storageclass.kubernetes.io/is-default-class' in item.metadata.annotations"
+#    - "item.metadata.annotations['storageclass.kubernetes.io/is-default-class'] == 'true'"
+  loop: "{{ storage_class.resources }}"
+  loop_control:
+    label: "{{ item.metadata.name }}"
+
+
+- name: Get PersistentVolumes
+  kubernetes.core.k8s_info:
+    api_version: v1
+    kind: PersistentVolume
+  register: pvs
+
+- name: Check PVs for block storage with EXT4
+  ansible.builtin.set_fact:
+    block_ext4_pvs: "{{ block_ext4_pvs | default([]) + [item.metadata.name] }}"
+  loop: "{{ pvs.resources }}"
+  when: 
+#    - item.spec.volumeMode == 'Filesystem'
+    - item.spec.volumeMode == 'Block'
+    - "'ext4' in (item.spec.csi.fsType | default(''))"
+
+- name: Print PVs for block storage with EXT4
+  ansible.builtin.debug:
+    msg: >
+      These persistent volumes created with an EXT4 file system. Increase the
+      filesystem overhead in CDI to be more than 10%. If you do not increase 
+      the filesystem overhead in CDI by this amount, your migration will fail. {{ block_ext4_pvs }}
+  when: block_ext4_pvs is defined

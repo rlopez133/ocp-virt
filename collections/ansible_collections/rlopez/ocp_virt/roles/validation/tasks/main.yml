@@ -1,0 +1,5 @@
+---
+# tasks file for validation
+- include_tasks: 10_ocp_version.yml
+- include_tasks: 20_storage_support.yml
+#- include_tasks: 30_firewall_rules.yml

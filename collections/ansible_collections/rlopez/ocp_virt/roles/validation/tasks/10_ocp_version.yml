@@ -1,0 +1,11 @@
+- name: Get OCP version and check if it's 4.12 or higher
+  kubernetes.core.k8s_info:
+    api_version: config.openshift.io/v1
+    kind: ClusterVersion
+  register: ocp_version
+  failed_when: ocp_version.resources[0].status.desired.version is version('4.12', '<')
+
+- name: Print OCP version
+  ansible.builtin.debug:
+    msg: "OCP version is {{ ocp_version.resources[0].status.desired.version }}, which meets the minimum requirement of 4.12."
+

@@ -1,0 +1,3 @@
+---
+# tasks file for providers
+- include_tasks: 10_create_vmware_provider.yml
