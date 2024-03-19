@@ -7,4 +7,4 @@
   roles:
 #  - {role: rlopez.ocp_virt.validation}
   - {role: rlopez.ocp_virt.providers}
-  - {role: rlopez.ocp_virt.virt-plan}
+  - {role: rlopez.ocp_virt.virt_plan}
