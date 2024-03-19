@@ -1,0 +1,33 @@
+- name: Deploy Virt Plan
+  kubernetes.core.k8s:
+    state: present
+    definition:
+      apiVersion: forklift.konveyor.io/v1beta1
+      kind: Plan
+      metadata:
+        name: "{{ plan_name }}"
+        namespace: openshift-mtv
+      spec:
+        archived: false
+        description: ''
+        map:
+          network:
+            name: "{{ plan_name }}-{{ random_suffix_network }}"
+            namespace: openshift-mtv
+          storage:
+            name: "{{ plan_name }}-{{ random_suffix_storage }}"
+            namespace: openshift-mtv
+        provider:
+          destination:
+            name: host
+            namespace: openshift-mtv
+          source:
+            name: vmware
+            namespace: openshift-mtv
+        targetNamespace: openshift-mtv
+        vms:
+          - hooks: []
+            id: vm-1508016
+          - hooks: []
+            id: vm-1508020
+        warm: false
