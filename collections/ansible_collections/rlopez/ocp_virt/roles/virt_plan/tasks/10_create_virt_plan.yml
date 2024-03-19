@@ -56,6 +56,31 @@
   ansible.builtin.debug:
     var: all_the_clusters
 
+- name: Build a list of all the folders
+  vmware.vmware_rest.vcenter_folder_info:
+    vcenter_hostname: "{{ vcenter_hostname }}"
+    vcenter_password: "{{ vcenter_password }}"
+    vcenter_username: "{{ vcenter_username }}"
+  register: my_folders
+
+- name: Build a list of all the folders with the type VIRTUAL_MACHINE and called vm
+  vmware.vmware_rest.vcenter_folder_info:
+    vcenter_hostname: "{{ vcenter_hostname }}"
+    vcenter_password: "{{ vcenter_password }}"
+    vcenter_username: "{{ vcenter_username }}"
+    filter_type: VIRTUAL_MACHINE
+    filter_names:
+    - vm
+  register: my_folders2
+
+- name: my folders
+  ansible.builtin.debug:
+    var: my_folders
+
+- name: my folders2
+  ansible.builtin.debug:
+    var: my_folders2
+
 - name: Deploy Virt Plan
   kubernetes.core.k8s:
     state: present
