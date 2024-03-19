@@ -115,28 +115,28 @@
   set_fact: 
     portgroup_id: "{{ my_portgroup.value[0].network }}"
 
-#- name: Create or update a NetworkMap
-#  kubernetes.core.k8s:
-#    state: present
-#    definition:
-#      apiVersion: forklift.konveyor.io/v1beta1
-#      kind: NetworkMap
-#      metadata:
-#        name: "{{ network_map_name }}"
-#        namespace: openshift-mtv
-#      spec:
-#        map:
-#          - destination:
-#              type: pod
-#            source:
-#              id: "{{ portgroup_id }}"
-#        provider:
-#          destination:
-#            name: host
-#            namespace: openshift-mtv
-#          source:
-#            name: vmware
-#            namespace: openshift-mtv
+- name: Create or update a NetworkMap
+  kubernetes.core.k8s:
+    state: present
+    definition:
+      apiVersion: forklift.konveyor.io/v1beta1
+      kind: NetworkMap
+      metadata:
+        name: "{{ networkmap_name }}"
+        namespace: openshift-mtv
+      spec:
+        map:
+          - destination:
+              type: pod
+            source:
+              id: "{{ portgroup_id }}"
+        provider:
+          destination:
+            name: host
+            namespace: openshift-mtv
+          source:
+            name: vmware
+            namespace: openshift-mtv
 
 - name: Build a list of all the datastores
   vmware.vmware_rest.vcenter_datastore_info:
@@ -145,9 +145,32 @@
     vcenter_username: "{{ vcenter_username }}"
   register: all_the_datastores
 
-- name: get datastores
-  debug:
-    var: all_the_datastores
+- name: Capture the datastore id
+  set_fact:
+    datastore_id: "{{ all_the_datastores.value[0].datastore }}"
+
+- name: Create or update a StorageMap
+  kubernetes.core.k8s:
+    state: present
+    definition:
+      apiVersion: forklift.konveyor.io/v1beta1
+      kind: StorageMap
+      metadata:
+        name: "{{ storagemap_name }}"
+        namespace: openshift-mtv
+      spec:
+        map:
+          - destination:
+              storageClass: ocs-storagecluster-ceph-rbd
+            source:
+              id: "{{ datastore_id }}"
+        provider:
+          destination:
+            name: host
+            namespace: openshift-mtv
+          source:
+            name: vmware
+            namespace: openshift-mtv
 
 
 - name: Deploy Virt Plan
@@ -164,10 +187,10 @@
         description: ''
         map:
           network:
-            name: "test-network"
+            name: "{{ networkmap_name }}"
             namespace: openshift-mtv
           storage:
-            name: "test-storage"
+            name: "{{ storagemap_name }}"
             namespace: openshift-mtv
         provider:
           destination:
