@@ -81,6 +81,13 @@
   ansible.builtin.debug:
     var: my_folders2
 
+- name: Retrieve VMs
+  vmware.vmware_rest.vcenter_vm_info:
+    vcenter_hostname: "{{ vcenter_hostname }}"
+    vcenter_password: "{{ vcenter_password }}"
+    vcenter_username: "{{ vcenter_username }}"
+    folders: 'group-v47'
+
 - name: Deploy Virt Plan
   kubernetes.core.k8s:
     state: present
