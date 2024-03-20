@@ -1,71 +1,6 @@
-#- name: Get vSphere login session
-#  ansible.builtin.uri:
-#    url: "https://{{ vcenter_hostname }}/rest/com/vmware/cis/session"
-#    method: POST
-#    headers:
-#      Content-Type: "application/json"
-#    body_format: json
-#    force_basic_auth: true
-#    url_username: "{{ vcenter_username }}"
-#    url_password: "{{ vcenter_password }}"
-#  register: login_response
-#
-#- name: Get list of datastores
-#  ansible.builtin.uri:
-#    url: "https://{{ vcenter_hostname }}/rest/vcenter/datastore"
-#    method: GET
-#    headers:
-#      Content-Type: "application/json"
-#      vmware-api-session-id: "{{ login_response.json.value }}"
-#  register: datastore_response
-
-#- name: datastores
-#  ansible.builtin.debug:
-#    var: datastore_response
-#
-#- name: collect a list of the datacenters
-#  vmware.vmware_rest.vcenter_datacenter_info:
-#    vcenter_hostname: "{{ vcenter_hostname }}"
-#    vcenter_password: "{{ vcenter_password }}"
-#    vcenter_username: "{{ vcenter_username }}"
-#  register: my_datacenters
-#
-#- name: my datacenters
-#  ansible.builtin.debug:
-#    var: my_datacenters
-#
-#- name: Get a list of the hosts
-#  vmware.vmware_rest.vcenter_host_info:
-#    vcenter_hostname: "{{ vcenter_hostname }}"
-#    vcenter_password: "{{ vcenter_password }}"
-#    vcenter_username: "{{ vcenter_username }}"
-#  register: my_hosts
-#
-#- name: my hosts
-#  ansible.builtin.debug:
-#    var: my_hosts
-#
-#- name: Build a list of all the clusters
-#  vmware.vmware_rest.vcenter_cluster_info:
-#    vcenter_hostname: "{{ vcenter_hostname }}"
-#    vcenter_password: "{{ vcenter_password }}"
-#    vcenter_username: "{{ vcenter_username }}"
-#  register: all_the_clusters
-#
-#- name: all clusters
-#  ansible.builtin.debug:
-#    var: all_the_clusters
-
 - name: Build a list of all the folders
   vmware.vmware_rest.vcenter_folder_info:
-    vcenter_hostname: "{{ vcenter_hostname }}"
-    vcenter_password: "{{ vcenter_password }}"
-    vcenter_username: "{{ vcenter_username }}"
   register: all_folders
-
-#- name: my folders
-#  ansible.builtin.debug:
-#    var: all_folders
 
 - name: Filter VM folders
   set_fact:
@@ -73,9 +8,6 @@
 
 - name: Check each VM folder for VMs
   vmware.vmware_rest.vcenter_vm_info:
-    vcenter_hostname: "{{ vcenter_hostname }}"
-    vcenter_password: "{{ vcenter_password }}"
-    vcenter_username: "{{ vcenter_username }}"
     folders: "{{ item.folder }}"
   register: vm_folders_with_vms
   loop: "{{ vm_folders }}"
@@ -105,9 +37,6 @@
 
 - name: Get information for the distributed port group 'segment-migrating-to-ocpvirt'
   vmware.vmware_rest.vcenter_network_info:
-    vcenter_hostname: "{{ vcenter_hostname }}"
-    vcenter_password: "{{ vcenter_password }}"
-    vcenter_username: "{{ vcenter_username }}"
     filter_types: DISTRIBUTED_PORTGROUP
   register: my_portgroup
 
@@ -140,9 +69,6 @@
 
 - name: Build a list of all the datastores
   vmware.vmware_rest.vcenter_datastore_info:
-    vcenter_hostname: "{{ vcenter_hostname }}"
-    vcenter_password: "{{ vcenter_password }}"
-    vcenter_username: "{{ vcenter_username }}"
   register: all_the_datastores
 
 - name: Capture the datastore id
