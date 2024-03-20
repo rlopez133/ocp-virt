@@ -33,7 +33,7 @@
   loop: "{{ vm_name_id_pairs }}"
   loop_control:
     loop_var: vm_id
-  when: vm_id.name in user_selected_vm_names
+  when: vm_id.name in user_selected_vm_names.split('\n')
 
 - name: Get information for the distributed port group 'segment-migrating-to-ocpvirt'
   vmware.vmware_rest.vcenter_network_info:
