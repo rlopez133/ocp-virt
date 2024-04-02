@@ -1,0 +1,16 @@
+- hosts: all
+  tasks:
+    - name: Print Linux kernel version
+      ansible.builtin.shell: uname -r
+      when: "'Linux' in vmi_guest_os_info['name']"
+      register: uname_output
+      changed_when: false
+
+    - name: Show kernel version
+      ansible.builtin.debug:
+        msg: "{{ uname_output.stdout }}"
+      when: uname_output is defined
+
+    - name: Perform ping on Windows
+      ansible.windows.win_ping:
+      when: vmi_guest_os_info == {}
