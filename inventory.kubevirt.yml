@@ -1,2 +1,4 @@
 ---
 plugin: kubevirt.core.kubevirt
+connections:
+  - use_service: False
