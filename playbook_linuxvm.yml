@@ -1,0 +1,18 @@
+---
+- name: Create DevOps users on Linux Hosts
+  hosts: all
+  become: yes
+  tasks:
+    - name: Ensure group 'devops' exists
+      ansible.builtin.group:
+        name: devops
+        state: present
+
+    - name: Create devops users and add to group
+      ansible.builtin.user:
+        name: "{{ item }}"
+        groups: devops
+        append: yes
+      loop:
+        - user1
+        - user2
