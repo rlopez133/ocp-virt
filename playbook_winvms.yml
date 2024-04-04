@@ -1,0 +1,18 @@
+---
+- name: Create DevOps users on Windows Hosts
+  hosts: all
+  tasks:
+    - name: Ensure group 'devops' exists
+      ansible.windows.win_group:
+        name: devops
+        state: present
+
+    - name: Create devops users and add to group
+      ansible.windows.win_user:
+        name: "{{ item }}"
+        password: "{{ password }}"
+        groups: devops
+        state: present
+      loop:
+        - user1
+        - user2
