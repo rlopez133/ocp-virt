@@ -1,0 +1,41 @@
+---
+- name: Remove LAMP Stack on RHEL 9
+  hosts: all
+  become: true
+
+  tasks:
+  
+    - name: stop and disable Apache
+      ansible.builtin.systemd:
+        name: httpd
+        state: stopped
+        enabled: false
+
+    - name: stop and disable MariaDB
+      ansible.builtin.systemd:
+        name: mariadb
+        state: stopped
+        enabled: false
+        
+    - name: Remove Apache
+      yum:
+        name: httpd
+        state: absent
+
+
+    - name: Remove MariaDB
+      ansible.builtin.dnf:
+        name: mariadb-server
+        state: absent
+
+    - name: Remove PHP and common modules
+      ansible.builtin.dnf:
+        name:
+          - php
+          - php-mysqlnd
+          - php-fpm
+          - php-opcache
+          - php-gd
+          - php-xml
+          - php-mbstring
+        state: absent
