@@ -32,7 +32,7 @@
                   storage:
                     resources:
                       requests:
-                        storage: 30Gi
+                        storage: 20Gi
             template:
               metadata:
                 labels:
