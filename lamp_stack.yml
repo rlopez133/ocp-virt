@@ -26,11 +26,6 @@
         state: started
         enabled: true
 
-    - name: Add the EPEL Release repository
-      ansible.builtin.dnf:
-        name: epel-release
-        state: present
-
     - name: Install PHP and common modules
       ansible.builtin.dnf:
         name:
