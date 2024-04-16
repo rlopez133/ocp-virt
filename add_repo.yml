@@ -1,0 +1,9 @@
+---
+- name: Run rhc connect command
+  hosts: localhost
+  gather_facts: false
+  become: true
+
+  tasks:
+    - name: Execute rhc connect command
+      command: "rhc connect --organization {{ org_id }} --activation-key {{ key }}"
