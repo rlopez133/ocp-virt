@@ -8,10 +8,10 @@
           apiVersion: kubevirt.io/v1
           kind: VirtualMachine
           metadata:
-            name: "{{ item.role }}-{{ item.env }}-{{ '%02d' | format(loop.index) }}"
+            name: "{{ item.role }}-{{ item.env }}-{{ '%02d' | format(item.id) }}"
             namespace: linuxvm
             labels:
-              app: "{{ item.role }}-{{ item.env }}-{{ '%02d' | format(loop.index) }}"
+              app: "{{ item.role }}-{{ item.env }}-{{ '%02d' | format(item.id) }}"
               kubevirt.io/dynamic-credentials-support: 'true'
               vm.kubevirt.io/template: rhel9-server-small
               vm.kubevirt.io/template.namespace: openshift
@@ -23,7 +23,7 @@
               - apiVersion: cdi.kubevirt.io/v1beta1
                 kind: DataVolume
                 metadata:
-                  name: "{{ item.role }}-{{ item.env }}-{{ '%02d' | format(loop.index) }}"
+                  name: "{{ item.role }}-{{ item.env }}-{{ '%02d' | format(item.id) }}"
                 spec:
                   sourceRef:
                     kind: DataSource
@@ -36,7 +36,7 @@
             template:
               metadata:
                 labels:
-                  kubevirt.io/domain: "{{ item.role }}-{{ item.env }}-{{ '%02d' | format(loop.index) }}"
+                  kubevirt.io/domain: "{{ item.role }}-{{ item.env }}-{{ '%02d' | format(item.id) }}"
                   kubevirt.io/size: small
               spec:
                 architecture: amd64
@@ -54,7 +54,7 @@
                           bus: virtio
                         name: cloudinitdisk
                     interfaces:
-                      - macAddress: "02:f3:be:00:00:{{ '%02x' | format(loop.index) }}"
+                      - macAddress: "02:f3:be:00:00:{{ '%02x' | format(item.id) }}"
                         masquerade: {}
                         model: virtio
                         name: default
@@ -77,7 +77,7 @@
                 terminationGracePeriodSeconds: 180
                 volumes:
                   - dataVolume:
-                      name: "{{ item.role }}-{{ item.env }}-{{ '%02d' | format(loop.index) }}"
+                      name: "{{ item.role }}-{{ item.env }}-{{ '%02d' | format(item.id) }}"
                     name: rootdisk
                   - cloudInitConfigDrive:
                       userData: |
@@ -86,24 +86,26 @@
                         password: "{{ vm_password }}"
                         chpasswd: { expire: False }
                     name: cloudinitdisk
-      loop: 
-        - { role: "web", env: "prod" }
-        - { role: "db", env: "prod" }
-        - { role: "app", env: "dev" }
-        - { role: "web", env: "test" }
-        - { role: "db", env: "dev" }
-        - { role: "app", env: "prod" }
-        - { role: "web", env: "dev" }
-        - { role: "db", env: "test" }
-        - { role: "app", env: "test" }
-        - { role: "web", env: "prod" }
-        - { role: "db", env: "prod" }
-        - { role: "app", env: "dev" }
-        - { role: "web", env: "test" }
-        - { role: "db", env: "dev" }
-        - { role: "app", env: "prod" }
-        - { role: "web", env: "dev" }
-        - { role: "db", env: "test" }
-        - { role: "app", env: "test" }
-        - { role: "web", env: "prod" }
-        - { role: "db", env: "prod" }
+      loop:
+        - { role: "web", env: "prod", id: 1 }
+        - { role: "web", env: "prod", id: 2 }
+        - { role: "app", env: "prod", id: 3 }
+        - { role: "app", env: "prod", id: 4 }
+        - { role: "db", env: "prod", id: 5 }
+        - { role: "db", env: "prod", id: 6 }
+        - { role: "web", env: "dev", id: 7 }
+        - { role: "web", env: "dev", id: 8 }
+        - { role: "app", env: "dev", id: 9 }
+        - { role: "app", env: "dev", id: 10 }
+        - { role: "db", env: "dev", id: 11 }
+        - { role: "db", env: "dev", id: 12 }
+        - { role: "web", env: "test", id: 13 }
+        - { role: "web", env: "test", id: 14 }
+        - { role: "app", env: "test", id: 15 }
+        - { role: "app", env: "test", id: 16 }
+        - { role: "db", env: "test", id: 17 }
+        - { role: "db", env: "test", id: 18 }
+        - { role: "app", env: "test", id: 19 }
+        - { role: "web", env: "test", id: 20 }
+
+        # Continue adding other roles and environments as needed
