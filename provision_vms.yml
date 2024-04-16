@@ -97,15 +97,5 @@
         - { role: "web", env: "dev", id: 8 }
         - { role: "app", env: "dev", id: 9 }
         - { role: "app", env: "dev", id: 10 }
-        - { role: "db", env: "dev", id: 11 }
-        - { role: "db", env: "dev", id: 12 }
-        - { role: "web", env: "test", id: 13 }
-        - { role: "web", env: "test", id: 14 }
-        - { role: "app", env: "test", id: 15 }
-        - { role: "app", env: "test", id: 16 }
-        - { role: "db", env: "test", id: 17 }
-        - { role: "db", env: "test", id: 18 }
-        - { role: "app", env: "test", id: 19 }
-        - { role: "web", env: "test", id: 20 }
 
         # Continue adding other roles and environments as needed
