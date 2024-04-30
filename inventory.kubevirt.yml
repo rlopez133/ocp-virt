@@ -2,3 +2,5 @@
 plugin: kubevirt.core.kubevirt
 connections:
   - use_service: False
+compose:
+  ansbile_winrm_server_cert_validation: ignore
