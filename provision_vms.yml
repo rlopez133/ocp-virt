@@ -82,9 +82,13 @@
                   - cloudInitConfigDrive:
                       userData: |
                         #cloud-config
-                        user: cloud-user
-                        password: "{{ vm_password }}"
-                        chpasswd: { expire: False }
+                        users:
+                          - name: cloud-user
+                            ssh_authorized_keys:
+                              - "{{ ssh_public_key }}"
+                            password: "{{ vm_password }}"
+                            chpasswd:
+                              expire: False
                     name: cloudinitdisk
       loop:
         - { role: "web", env: "prod", id: 1 }
@@ -97,5 +101,3 @@
         - { role: "web", env: "dev", id: 8 }
         - { role: "app", env: "dev", id: 9 }
         - { role: "app", env: "dev", id: 10 }
-
-        # Continue adding other roles and environments as needed
