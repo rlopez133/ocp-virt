@@ -84,11 +84,17 @@
                         #cloud-config
                         users:
                           - name: cloud-user
+                            sudo: ['ALL=(ALL) NOPASSWD: ALL']
+                            groups: wheel
+                            shell: /bin/bash
                             ssh_authorized_keys:
                               - "{{ ssh_public_key }}"
-                            password: "{{ vm_password }}"
-                            chpasswd:
-                              expire: False
+                            passwd: "{{ vm_password }}"
+                            lock_passwd: false
+                        chpasswd:
+                          list: |
+                            cloud-user:{{ vm_password }}
+                          expire: False
                     name: cloudinitdisk
       loop:
         - { role: "web", env: "prod", id: 1 }
