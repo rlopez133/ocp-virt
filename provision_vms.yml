@@ -2,6 +2,13 @@
 - name: Deploy VMs
   hosts: localhost
   tasks:
+
+    - name: Create the 'linuxvm' namespace
+      kubernetes.core.k8s:
+        name: linuxvm
+        kind: Namespace
+        api_version: v1
+        state: present
     - name: Create VM
       kubernetes.core.k8s:
         definition:
