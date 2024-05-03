@@ -1,7 +1,7 @@
 ---
 - name: Run rhc connect command
   hosts: all
-  gather_facts: true
+  gather_facts: false
   become: true
 
   tasks:
