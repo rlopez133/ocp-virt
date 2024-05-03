@@ -6,4 +6,4 @@
 
   tasks:
     - name: Execute rhc connect command
-      command: "rhc connect --organization {{ org_id }} --activation-key {{ key }}"
+      command: "sudo rhc connect --organization {{ org_id }} --activation-key {{ key }}"
