@@ -7,3 +7,4 @@
   tasks:
     - name: Execute rhc connect command
       command: "rhc connect --organization {{ org_id }} --activation-key {{ key }}"
+      no_log: true
