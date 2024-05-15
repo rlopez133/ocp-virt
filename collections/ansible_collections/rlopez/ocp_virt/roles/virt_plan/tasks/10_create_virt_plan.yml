@@ -45,7 +45,7 @@
     portgroup_id: "{{ my_portgroup.value[0].network }}"
 
 - name: Create or update a NetworkMap
-  kubernetes.core.k8s:
+  redhat.openshift.k8s:
     state: present
     definition:
       apiVersion: forklift.konveyor.io/v1beta1
@@ -76,7 +76,7 @@
     datastore_id: "{{ all_the_datastores.value[0].datastore }}"
 
 - name: Create or update a StorageMap
-  kubernetes.core.k8s:
+  redhat.openshift.k8s:
     state: present
     definition:
       apiVersion: forklift.konveyor.io/v1beta1
@@ -100,7 +100,7 @@
 
 
 - name: Deploy Virt Plan
-  kubernetes.core.k8s:
+  redhat.openshift.k8s:
     state: present
     definition:
       apiVersion: forklift.konveyor.io/v1beta1
@@ -130,7 +130,7 @@
         warm: false
 
 - name: Create a Migration manifest to run the Plan CR
-  kubernetes.core.k8s:
+  redhat.openshift.k8s:
     api_version: forklift.konveyor.io/v1beta1
     kind: Migration
     namespace: openshift-mtv
