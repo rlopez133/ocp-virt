@@ -3,7 +3,7 @@
   register: all_folders
 
 - name: Filter VM folders
-  set_fact:
+  ansible.builtin.set_fact:
     vm_folders: "{{ all_folders.value | selectattr('type', 'equalto', 'VIRTUAL_MACHINE') | list }}"
 
 - name: Check each VM folder for VMs
@@ -14,7 +14,7 @@
   when: vm_folders | length > 0
 
 - name: Display VM names and IDs
-  debug:
+  ansible.builtin.debug:
     msg: "VM Name: {{ item.name }}, VM ID: {{ item.vm }}"
   loop: "{{ vm_folders_with_vms.results | map(attribute='value') | flatten }}"
   when: item | length > 0
@@ -22,13 +22,13 @@
     label: "{{ item.name }}"
 
 - name: Collect VM names and IDs
-  set_fact:
+  ansible.builtin.set_fact:
     vm_name_id_pairs: "{{ vm_name_id_pairs | default([]) + [{'name': item.name, 'vm': item.vm}] }}"
   loop: "{{ vm_folders_with_vms.results | map(attribute='value') | flatten }}"
   when: item | length > 0
 
 - name: Prepare VMs for Plan spec
-  set_fact:
+  ansible.builtin.set_fact:
     vms_for_plan_spec: "{{ vms_for_plan_spec | default([]) + [{'hooks': [], 'id': vm_id.vm}] }}"
   loop: "{{ vm_name_id_pairs }}"
   loop_control:
@@ -41,7 +41,7 @@
   register: my_portgroup
 
 - name: Capture the distrivuted portgroup id to make network mappings
-  set_fact: 
+  ansible.builtin.set_fact: 
     portgroup_id: "{{ my_portgroup.value[0].network }}"
 
 - name: Create or update a NetworkMap
@@ -76,7 +76,7 @@
     datastore_id: "{{ all_the_datastores.value[0].datastore }}"
 
 - name: Create or update a StorageMap
-  kubernetes.core.k8s:
+  redhat.openshift.k8s:
     state: present
     definition:
       apiVersion: forklift.konveyor.io/v1beta1
@@ -100,7 +100,7 @@
 
 
 - name: Deploy Virt Plan
-  kubernetes.core.k8s:
+  redhat.openshift.k8s:
     state: present
     definition:
       apiVersion: forklift.konveyor.io/v1beta1
@@ -130,7 +130,7 @@
         warm: false
 
 - name: Create a Migration manifest to run the Plan CR
-  kubernetes.core.k8s:
+  redhat.openshift.k8s:
     api_version: forklift.konveyor.io/v1beta1
     kind: Migration
     namespace: openshift-mtv
