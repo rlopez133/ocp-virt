@@ -4,7 +4,7 @@
   tasks:
 
     - name: Delete the 'linuxvm' namespace
-      redhat.openshift.k8s:
+      kubernetes.core.k8s:
         name: linuxvm
         kind: Namespace
         api_version: v1
