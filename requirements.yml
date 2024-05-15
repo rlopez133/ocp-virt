@@ -3,3 +3,4 @@ collections:
 - name: vmware.vmware_rest
 - name: community.general
 - name: kubevirt.core
+- name: kubernetes.core
