@@ -1,5 +1,5 @@
 - name: Deploy Provider resource
-  redhat.openshift.k8s:
+  kubernetes.core.k8s:
     state: present
     definition:
       apiVersion: forklift.konveyor.io/v1beta1

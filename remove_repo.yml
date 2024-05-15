@@ -6,5 +6,5 @@
 
   tasks:
     - name: Execute rhc connect command
-      ansible.builtin.command: "rhc disconnect"
+      command: "rhc disconnect"
       no_log: true
