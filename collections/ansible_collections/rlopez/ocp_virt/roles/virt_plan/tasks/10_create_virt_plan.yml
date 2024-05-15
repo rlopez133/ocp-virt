@@ -76,7 +76,7 @@
     datastore_id: "{{ all_the_datastores.value[0].datastore }}"
 
 - name: Create or update a StorageMap
-  redhat.openshift.k8s:
+  kubernetes.core.k8s:
     state: present
     definition:
       apiVersion: forklift.konveyor.io/v1beta1
@@ -100,7 +100,7 @@
 
 
 - name: Deploy Virt Plan
-  redhat.openshift.k8s:
+  kubernetes.core.k8s:
     state: present
     definition:
       apiVersion: forklift.konveyor.io/v1beta1
@@ -130,7 +130,7 @@
         warm: false
 
 - name: Create a Migration manifest to run the Plan CR
-  redhat.openshift.k8s:
+  kubernetes.core.k8s:
     api_version: forklift.konveyor.io/v1beta1
     kind: Migration
     namespace: openshift-mtv
